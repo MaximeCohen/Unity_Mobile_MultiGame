@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.UI;
 
 namespace TicTacToe
 {
@@ -26,6 +27,13 @@ namespace TicTacToe
         };
     }
 
+    public enum Result
+    {
+        WIN,
+        LOOSE,
+        DRAW
+    }
+
     public class TTT_Board : MonoBehaviour
     {
         [Header("References")]
@@ -33,7 +41,8 @@ namespace TicTacToe
         [SerializeField] private TTT_IA _iA = null;
         [SerializeField] private Cells _arrayCell;
 
-        public UnityAction<bool> OnGameDone = null;
+        public UnityAction<Result> OnGameDone = null;
+        public UnityAction OnGameStart = null;
 
         private State _playerShape = State.CROSS;
 
@@ -53,6 +62,7 @@ namespace TicTacToe
                 _cells[i].OnClick += () => HandlePlayerClickCell(index);
             }
             _iA.OnComputeDone += HandleIaSelectCell;
+            OnGameStart?.Invoke();
         }
 
         private bool IsLineSameShape(int index1, int index2, int index3)
@@ -63,6 +73,11 @@ namespace TicTacToe
                 return true;
             return false;
 
+        }
+
+        private bool CheckBoardFull()
+        {
+            return Array.TrueForAll(_cells, cell => cell.CurrentState != State.NONE);
         }
 
         private bool CheckGameDone()
@@ -83,10 +98,16 @@ namespace TicTacToe
         {
             if (CheckGameDone())
             {
-                var isPlayerWin = _cells[_lineDone.Item1].CurrentState == _playerShape;
+                var playerResult = _cells[_lineDone.Item1].CurrentState == _playerShape ? Result.WIN : Result.LOOSE;
                 _cellsCanvasGroup.blocksRaycasts = false;
-                OnGameDone?.Invoke(isPlayerWin);
-                Debug.Log(isPlayerWin ? "You win !" : "You loose !");
+                Debug.Log($"You {playerResult} !");
+                OnGameDone?.Invoke(playerResult);
+            }
+            else if (CheckBoardFull())
+            {
+                _cellsCanvasGroup.blocksRaycasts = false;
+                Debug.Log("Draw !");
+                OnGameDone?.Invoke(Result.DRAW);
             }
             else
             {
@@ -105,6 +126,7 @@ namespace TicTacToe
             }
             _isPlayerTurn = true;
             _cellsCanvasGroup.blocksRaycasts = true;
+            OnGameStart?.Invoke();
         }
 
         #region Event Handler
