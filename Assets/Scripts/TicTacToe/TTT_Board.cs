@@ -42,15 +42,16 @@ namespace TicTacToe
         [SerializeField] private Cells _arrayCell;
 
         public UnityAction<Result> OnGameDone = null;
+        public UnityAction<bool> OnTurnDone = null;
         public UnityAction OnGameStart = null;
 
-        private State _playerShape = State.CROSS;
+        private State _playerOneShape = State.CROSS;
 
         private TTT_Cell[] _cells;
 
         private (int, int, int) _lineDone;
 
-        private bool _isPlayerTurn = true;
+        private bool _playerOneTurn = true;
 
 
         private void Start()
@@ -98,7 +99,7 @@ namespace TicTacToe
         {
             if (CheckGameDone())
             {
-                var playerResult = _cells[_lineDone.Item1].CurrentState == _playerShape ? Result.WIN : Result.LOOSE;
+                var playerResult = _cells[_lineDone.Item1].CurrentState == _playerOneShape ? Result.WIN : Result.LOOSE;
                 _cellsCanvasGroup.blocksRaycasts = false;
                 Debug.Log($"You {playerResult} !");
                 OnGameDone?.Invoke(playerResult);
@@ -111,10 +112,11 @@ namespace TicTacToe
             }
             else
             {
-                _isPlayerTurn = !_isPlayerTurn;
-                _cellsCanvasGroup.blocksRaycasts = _isPlayerTurn;
-                if (!_isPlayerTurn)
+                _playerOneTurn = !_playerOneTurn;
+                _cellsCanvasGroup.blocksRaycasts = _playerOneTurn;
+                if (!_playerOneTurn)
                     _iA.Compute(_cells);
+                OnTurnDone?.Invoke(_playerOneTurn);
             }
         }
 
@@ -124,7 +126,7 @@ namespace TicTacToe
             {
                 cell.CurrentState = State.NONE;
             }
-            _isPlayerTurn = true;
+            _playerOneTurn = true;
             _cellsCanvasGroup.blocksRaycasts = true;
             OnGameStart?.Invoke();
         }
@@ -135,13 +137,13 @@ namespace TicTacToe
         {
             if (_cells[index].CurrentState != State.NONE)
                 return;
-            _cells[index].CurrentState = _playerShape;
+            _cells[index].CurrentState = _playerOneShape;
             TurnDone();
         }
 
         private void HandleIaSelectCell(int index)
         {
-            _cells[index].CurrentState = _playerShape == State.CROSS ? State.CIRCLE : State.CROSS;
+            _cells[index].CurrentState = _playerOneShape == State.CROSS ? State.CIRCLE : State.CROSS;
             TurnDone();
         }
 

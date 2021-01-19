@@ -8,8 +8,9 @@ namespace TicTacToe
 {
     public class TTT_IA : MonoBehaviour
     {
-        public enum Difficult
+        public enum IAState
         {
+            NONE,
             EASY,
             NORMAL,
             HARD
@@ -17,7 +18,7 @@ namespace TicTacToe
 
         public UnityAction<int> OnComputeDone = null;
 
-        [SerializeField] public Difficult _difficult;
+        [SerializeField] public IAState _state = IAState.EASY;
 
         private int _moveFound;
 
@@ -31,7 +32,16 @@ namespace TicTacToe
 
         public void Compute(TTT_Cell[] cells)
         {
-            ComputeEasy(cells);
+            switch (_state)
+            {
+                case IAState.EASY:
+                    ComputeEasy(cells);
+                    break;
+                case IAState.NORMAL:
+                    break;
+                case IAState.HARD:
+                    break;
+            }
             StartCoroutine(WaitBeforeComputeDoneCoroutine(1));
         }
 

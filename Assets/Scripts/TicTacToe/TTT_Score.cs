@@ -13,6 +13,7 @@ namespace TicTacToe
         private struct Score
         {
             public Image Shape;
+            public Image Outline;
             public TextMeshProUGUI Text;
             [NonSerialized] public int value;
         }
@@ -20,32 +21,48 @@ namespace TicTacToe
         [Header("References")]
         [SerializeField] private TTT_Board _board = null;
 
-        [SerializeField] private Score _scorePlayer;
-        [SerializeField] private Score _scoreIA;
+        [SerializeField] private Score _scorePlayerOne;
+        [SerializeField] private Score _scorePlayerTwo;
 
         private void Start()
         {
             _board.OnGameDone += HandleGameDone;
-            _scorePlayer.value = 0;
-            _scoreIA.value = 0;
+            _board.OnTurnDone += HandleTurnDone;
+            _board.OnGameStart += HandleGameStart;
+            _scorePlayerOne.value = 0;
+            _scorePlayerTwo.value = 0;
             RefreshText();
         }
 
         private void RefreshText()
         {
-            _scorePlayer.Text.text = $"{_scorePlayer.value}";
-            _scoreIA.Text.text = $"{_scoreIA.value}";
+            _scorePlayerOne.Text.text = $"{_scorePlayerOne.value}";
+            _scorePlayerTwo.Text.text = $"{_scorePlayerTwo.value}";
+        }
+
+        private void HandleGameStart()
+        {
+            _scorePlayerOne.Outline.gameObject.SetActive(true);
+            _scorePlayerTwo.Outline.gameObject.SetActive(false);
+        }
+
+        private void HandleTurnDone(bool isPlayerOne)
+        {
+            _scorePlayerOne.Outline.gameObject.SetActive(isPlayerOne);
+            _scorePlayerTwo.Outline.gameObject.SetActive(!isPlayerOne);
         }
 
         private void HandleGameDone(Result result)
         {
+            _scorePlayerOne.Outline.gameObject.SetActive(false);
+            _scorePlayerTwo.Outline.gameObject.SetActive(false);
             switch (result)
             {
                 case Result.WIN:
-                    ++_scorePlayer.value;
+                    ++_scorePlayerOne.value;
                     break;
                 case Result.LOOSE:
-                    ++_scoreIA.value;
+                    ++_scorePlayerTwo.value;
                     break;
             }
             RefreshText();
