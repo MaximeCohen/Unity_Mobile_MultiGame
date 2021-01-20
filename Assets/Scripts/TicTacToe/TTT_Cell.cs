@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
@@ -7,11 +8,11 @@ using UnityEngine.UI;
 
 namespace TicTacToe
 {
-    public enum State
+    public enum Shape
     {
-        NONE,
-        CROSS,
-        CIRCLE
+        NONE = 0,
+        CROSS = 1,
+        CIRCLE = 2
     }
 
     public class TTT_Cell : MonoBehaviour, IPointerClickHandler
@@ -23,32 +24,32 @@ namespace TicTacToe
         [SerializeField] private Sprite _spriteCross = null;
         [SerializeField] private Sprite _spriteCircle = null;
 
-        private State _currentState = State.NONE;
+        private Shape _currentShape = Shape.NONE;
 
-        public State CurrentState
+        public Shape CurrentShape
         {
-            get => _currentState;
+            get => _currentShape;
             set
             {
-                SetImageShapeByState(value);
-                _currentState = value;
+                SetImageShapeByShape(value);
+                _currentShape = value;
             }
         }
 
 
-        private void SetImageShapeByState(State state)
+        private void SetImageShapeByShape(Shape state)
         {
             switch (state)
             {
-                case State.NONE:
+                case Shape.NONE:
                     _imageShape.sprite = null;
                     _imageShape.color = Color.clear;
                     break;
-                case State.CROSS:
+                case Shape.CROSS:
                     _imageShape.sprite = _spriteCross;
                     _imageShape.color = Color.white;
                     break;
-                case State.CIRCLE:
+                case Shape.CIRCLE:
                     _imageShape.sprite = _spriteCircle;
                     _imageShape.color = Color.white;
                     break;

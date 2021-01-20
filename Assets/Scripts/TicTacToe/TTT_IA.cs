@@ -24,7 +24,7 @@ namespace TicTacToe
 
         private void ComputeEasy(TTT_Cell[] cells)
         {
-            var noneCells = Array.FindAll(cells, cell => cell.CurrentState == State.NONE);
+            var noneCells = Array.FindAll(cells, cell => cell.CurrentShape == Shape.NONE);
             var random = new System.Random();
             int noneIndex = random.Next(0, noneCells.Length);
             _moveFound = Array.IndexOf(cells, noneCells[noneIndex]);

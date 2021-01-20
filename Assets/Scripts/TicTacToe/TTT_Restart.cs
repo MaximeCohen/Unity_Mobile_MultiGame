@@ -11,7 +11,7 @@ namespace TicTacToe
         [SerializeField] private TTT_Board _board = null;
         [SerializeField] private Button _button = null;
 
-        private void Start()
+        private void Awake()
         {
             _button.onClick.AddListener(HandleClickButton);
             _board.OnGameDone += HandleGameDone;

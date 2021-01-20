@@ -20,24 +20,53 @@ namespace TicTacToe
 
         [Header("References")]
         [SerializeField] private TTT_Board _board = null;
+        [SerializeField] Sprite _imageCross;
+        [SerializeField] Sprite _imageCircle;
+
 
         [SerializeField] private Score _scorePlayerOne;
         [SerializeField] private Score _scorePlayerTwo;
 
-        private void Start()
+        private void Awake()
         {
             _board.OnGameDone += HandleGameDone;
             _board.OnTurnDone += HandleTurnDone;
             _board.OnGameStart += HandleGameStart;
-            _scorePlayerOne.value = 0;
-            _scorePlayerTwo.value = 0;
-            RefreshText();
+        }
+
+        private void Start()
+        {
+            ResetValues();
         }
 
         private void RefreshText()
         {
             _scorePlayerOne.Text.text = $"{_scorePlayerOne.value}";
             _scorePlayerTwo.Text.text = $"{_scorePlayerTwo.value}";
+        }
+
+        public void ResetValues()
+        {
+            _scorePlayerOne.value = 0;
+            _scorePlayerTwo.value = 0;
+            RefreshText();
+        }
+
+        public void ChangeShape(int shapeIndex)
+        {
+            Shape shape = (Shape)shapeIndex;
+            switch (shape)
+            {
+                case Shape.CROSS:
+                    _scorePlayerOne.Shape.sprite = _imageCross;
+                    _scorePlayerTwo.Shape.sprite = _imageCircle;
+                    break;
+                case Shape.CIRCLE:
+                    _scorePlayerOne.Shape.sprite = _imageCircle;
+                    _scorePlayerTwo.Shape.sprite = _imageCross;
+                    break;
+            }
+            ResetValues();
         }
 
         private void HandleGameStart()

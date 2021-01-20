@@ -16,7 +16,8 @@ namespace TicTacToe
         [SerializeField] private Color _loose = Color.red;
         [SerializeField] private Color _draw = Color.yellow;
 
-        private void Start()
+
+        private void Awake()
         {
             _board.OnGameStart += HandleGameStart;
             _board.OnGameDone += HandleGameDone;
