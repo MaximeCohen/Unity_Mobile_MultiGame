@@ -41,11 +41,15 @@ namespace TicTacToe
         [SerializeField] private TTT_IA _iA = null;
         [SerializeField] private Cells _arrayCell;
 
+        [Header("Settings")]
+        [SerializeField] public bool IsMultiplayer = false;
+
         public UnityAction<Result> OnGameDone = null;
         public UnityAction<bool> OnTurnDone = null;
         public UnityAction OnGameStart = null;
 
         private Shape _playerOneShape = Shape.CROSS;
+        private Shape _playerTwoShape = Shape.CIRCLE;
 
         private TTT_Cell[] _cells;
 
@@ -119,7 +123,7 @@ namespace TicTacToe
                 _playerOneTurn = !_playerOneTurn;
                 _cellsCanvasGroup.blocksRaycasts = _playerOneTurn;
                 if (!_playerOneTurn)
-                    _iA.Compute(_cells);
+                    _iA.Compute(_cells, _playerTwoShape);
                 OnTurnDone?.Invoke(_playerOneTurn);
             }
         }

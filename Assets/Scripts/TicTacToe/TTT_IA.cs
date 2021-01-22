@@ -18,11 +18,12 @@ namespace TicTacToe
 
         public UnityAction<int> OnComputeDone = null;
 
-        [SerializeField] public IAState _state = IAState.EASY;
+        [SerializeField] public IAState State = IAState.EASY;
 
         private int _moveFound;
 
-        private void ComputeEasy(TTT_Cell[] cells)
+
+        private void ComputeEasy(TTT_Cell[] cells, Shape iaShape)
         {
             var noneCells = Array.FindAll(cells, cell => cell.CurrentShape == Shape.NONE);
             var random = new System.Random();
@@ -30,12 +31,17 @@ namespace TicTacToe
             _moveFound = Array.IndexOf(cells, noneCells[noneIndex]);
         }
 
-        public void Compute(TTT_Cell[] cells)
+        private void ComputeNormal(TTT_Cell[] cells, Shape iaShape)
         {
-            switch (_state)
+
+        }
+
+        public void Compute(TTT_Cell[] cells, Shape iaShape)
+        {
+            switch (State)
             {
                 case IAState.EASY:
-                    ComputeEasy(cells);
+                    ComputeEasy(cells, iaShape);
                     break;
                 case IAState.NORMAL:
                     break;

@@ -4,5 +4,11 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/TicTacToe/TTT_Menu.unity
+    guid: 5a310e9794a77a64a9460df6e36b2015
+  - enabled: 1
+    path: Assets/Scenes/TicTacToe/TTT_Game.unity
+    guid: ea7be0edb3d7d1245b8fc5e084f327fd
   m_configObjects: {}

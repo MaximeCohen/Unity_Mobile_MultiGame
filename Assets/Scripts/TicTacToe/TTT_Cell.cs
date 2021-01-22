@@ -8,6 +8,7 @@ using UnityEngine.UI;
 
 namespace TicTacToe
 {
+    [Serializable]
     public enum Shape
     {
         NONE = 0,
