@@ -15,17 +15,22 @@ namespace TicTacToe
         {
             _button.onClick.AddListener(HandleClickButton);
             _board.OnGameDone += HandleGameDone;
+            _board.OnGameStart += HandleGameStart;
         }
 
         private void HandleClickButton()
         {
             _board.RestartGame();
-            _button.gameObject.SetActive(false);
         }
 
         private void HandleGameDone(Result result)
         {
             _button.gameObject.SetActive(true);
+        }
+
+        private void HandleGameStart()
+        {
+            _button.gameObject.SetActive(false);
         }
     }
 

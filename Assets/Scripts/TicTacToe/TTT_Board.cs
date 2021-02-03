@@ -29,14 +29,15 @@ namespace TicTacToe
 
     public enum Result
     {
-        WIN,
-        LOOSE,
+        PLAYER_ONE_WIN,
+        PLAYER_TWO_WIN,
         DRAW
     }
 
     public class TTT_Board : MonoBehaviour
     {
         [Header("References")]
+        [SerializeField] private TTT_ShapeScriptableObject _data;
         [SerializeField] private CanvasGroup _cellsCanvasGroup = null;
         [SerializeField] private TTT_IA _iA = null;
         [SerializeField] private Cells _arrayCell;
@@ -44,12 +45,12 @@ namespace TicTacToe
         [Header("Settings")]
         [SerializeField] public bool IsMultiplayer = false;
 
-        public UnityAction<Result> OnGameDone = null;
-        public UnityAction<bool> OnTurnDone = null;
         public UnityAction OnGameStart = null;
+        public UnityAction<bool> OnTurnDone = null;
+        public UnityAction<Result> OnGameDone = null;
 
-        private Shape _playerOneShape = Shape.CROSS;
-        private Shape _playerTwoShape = Shape.CIRCLE;
+        private Shape _playerOneShape = Shape.NONE;
+        private Shape _playerTwoShape = Shape.NONE;
 
         private TTT_Cell[] _cells;
 
@@ -65,6 +66,8 @@ namespace TicTacToe
 
         private void Start()
         {
+            _playerOneShape = _data.DefaultPlayerOneShape;
+            _playerTwoShape = _data.DefaultPlayerTwoShape;
             _cells = _arrayCell.GetArray();
             for (int i = 0; i < _cells.Length; i++)
             {
@@ -107,7 +110,7 @@ namespace TicTacToe
         {
             if (CheckGameDone())
             {
-                var playerResult = _cells[_lineDone.Item1].CurrentShape == _playerOneShape ? Result.WIN : Result.LOOSE;
+                var playerResult = _cells[_lineDone.Item1].CurrentShape == _playerOneShape ? Result.PLAYER_ONE_WIN : Result.PLAYER_TWO_WIN;
                 _cellsCanvasGroup.blocksRaycasts = false;
                 Debug.Log($"You {playerResult} !");
                 OnGameDone?.Invoke(playerResult);
@@ -139,9 +142,10 @@ namespace TicTacToe
             OnGameStart?.Invoke();
         }
 
-        public void ChangeShape(int shapeIndex)
+        public void ChangeShape(Shape shapePlayerOne, Shape shapePlayerTwo)
         {
-            _playerOneShape = (Shape)shapeIndex;
+            _playerOneShape = shapePlayerOne;
+            _playerTwoShape = shapePlayerTwo;
             RestartGame();
         }
 
@@ -157,7 +161,7 @@ namespace TicTacToe
 
         private void HandleIaSelectCell(int index)
         {
-            _cells[index].CurrentShape = _playerOneShape == Shape.CROSS ? Shape.CIRCLE : Shape.CROSS;
+            _cells[index].CurrentShape = _playerTwoShape;
             TurnDone();
         }
 

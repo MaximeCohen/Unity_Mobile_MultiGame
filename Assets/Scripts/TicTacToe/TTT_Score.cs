@@ -19,9 +19,8 @@ namespace TicTacToe
         }
 
         [Header("References")]
+        [SerializeField] private TTT_ShapeScriptableObject _data = null;
         [SerializeField] private TTT_Board _board = null;
-        [SerializeField] Sprite _imageCross;
-        [SerializeField] Sprite _imageCircle;
 
 
         [SerializeField] private Score _scorePlayerOne;
@@ -52,20 +51,10 @@ namespace TicTacToe
             RefreshText();
         }
 
-        public void ChangeShape(int shapeIndex)
+        public void ChangeShape(Shape shapePlayerOne, Shape shapePlayerTwo)
         {
-            Shape shape = (Shape)shapeIndex;
-            switch (shape)
-            {
-                case Shape.CROSS:
-                    _scorePlayerOne.Shape.sprite = _imageCross;
-                    _scorePlayerTwo.Shape.sprite = _imageCircle;
-                    break;
-                case Shape.CIRCLE:
-                    _scorePlayerOne.Shape.sprite = _imageCircle;
-                    _scorePlayerTwo.Shape.sprite = _imageCross;
-                    break;
-            }
+            _scorePlayerOne.Shape.sprite = _data.GetSpriteByShape(shapePlayerOne);
+            _scorePlayerTwo.Shape.sprite = _data.GetSpriteByShape(shapePlayerTwo);
             ResetValues();
         }
 
@@ -87,10 +76,10 @@ namespace TicTacToe
             _scorePlayerTwo.Outline.gameObject.SetActive(false);
             switch (result)
             {
-                case Result.WIN:
+                case Result.PLAYER_ONE_WIN:
                     ++_scorePlayerOne.value;
                     break;
-                case Result.LOOSE:
+                case Result.PLAYER_TWO_WIN:
                     ++_scorePlayerTwo.value;
                     break;
             }

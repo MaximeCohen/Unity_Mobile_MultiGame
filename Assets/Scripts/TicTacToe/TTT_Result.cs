@@ -28,21 +28,24 @@ namespace TicTacToe
             _text.text = "";
         }
 
+        private void WriteText(Color color, string text)
+        {
+            _text.color = color;
+            _text.text = text;
+        }
+
         private void HandleGameDone(Result result)
         {
             switch (result)
             {
-                case Result.WIN:
-                    _text.color = _win;
-                    _text.text = "You Win !";
+                case Result.PLAYER_ONE_WIN:
+                    WriteText(_win, "You Win !");
                     break;
-                case Result.LOOSE:
-                    _text.color = _loose;
-                    _text.text = "You Loose !";
+                case Result.PLAYER_TWO_WIN:
+                    WriteText(_loose, "You Loose !");
                     break;
                 case Result.DRAW:
-                    _text.color = _draw;
-                    _text.text = "Draw !";
+                    WriteText(_draw, "Draw !");
                     break;
             }
         }

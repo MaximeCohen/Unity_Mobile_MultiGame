@@ -8,22 +8,14 @@ using UnityEngine.UI;
 
 namespace TicTacToe
 {
-    [Serializable]
-    public enum Shape
-    {
-        NONE = 0,
-        CROSS = 1,
-        CIRCLE = 2
-    }
 
     public class TTT_Cell : MonoBehaviour, IPointerClickHandler
     {
         public UnityAction OnClick = null;
 
         [Header("References")]
+        [SerializeField] private TTT_ShapeScriptableObject _data = null;
         [SerializeField] private Image _imageShape = null;
-        [SerializeField] private Sprite _spriteCross = null;
-        [SerializeField] private Sprite _spriteCircle = null;
 
         private Shape _currentShape = Shape.NONE;
 
@@ -32,29 +24,16 @@ namespace TicTacToe
             get => _currentShape;
             set
             {
-                SetImageShapeByShape(value);
+                SetImageByShape(value);
                 _currentShape = value;
             }
         }
 
 
-        private void SetImageShapeByShape(Shape state)
+        private void SetImageByShape(Shape shape)
         {
-            switch (state)
-            {
-                case Shape.NONE:
-                    _imageShape.sprite = null;
-                    _imageShape.color = Color.clear;
-                    break;
-                case Shape.CROSS:
-                    _imageShape.sprite = _spriteCross;
-                    _imageShape.color = Color.white;
-                    break;
-                case Shape.CIRCLE:
-                    _imageShape.sprite = _spriteCircle;
-                    _imageShape.color = Color.white;
-                    break;
-            }
+            _imageShape.sprite = _data.GetSpriteByShape(shape);
+            _imageShape.color = shape == Shape.NONE ? Color.clear : Color.white;
         }
 
         public void OnPointerClick(PointerEventData eventData)
