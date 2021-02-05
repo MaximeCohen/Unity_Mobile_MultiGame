@@ -10,7 +10,8 @@ namespace TicTacToe
     {
         NONE = 0,
         CROSS = 1,
-        CIRCLE = 2
+        CIRCLE = 2,
+        SQUARE
     }
 
     [CreateAssetMenu(fileName = "Shapes", menuName = "Datas/TicTacToe/Shapes", order = 1)]

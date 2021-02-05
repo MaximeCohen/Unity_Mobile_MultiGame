@@ -84,7 +84,6 @@ namespace TicTacToe
                 && _cells[index1].CurrentShape == _cells[index3].CurrentShape)
                 return true;
             return false;
-
         }
 
         private bool CheckBoardFull()
