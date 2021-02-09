@@ -3204,7 +3204,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86c698a6fede0cd429b2de7124e5ca23, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  State: 1
+  State: 2
 --- !u!4 &1491809339
 Transform:
   m_ObjectHideFlags: 0
@@ -4738,6 +4738,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _board: {fileID: 1500031840}
   _text: {fileID: 506380890}
+  _normal: {r: 1, g: 1, b: 1, a: 1}
   _win: {r: 0, g: 1, b: 0, a: 1}
   _loose: {r: 1, g: 0, b: 0, a: 1}
   _draw: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}

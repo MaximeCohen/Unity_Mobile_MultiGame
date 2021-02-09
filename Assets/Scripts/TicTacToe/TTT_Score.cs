@@ -58,7 +58,7 @@ namespace TicTacToe
             ResetValues();
         }
 
-        private void HandleGameStart()
+        private void HandleGameStart(bool isMultiplayer)
         {
             _scorePlayerOne.Outline.gameObject.SetActive(true);
             _scorePlayerTwo.Outline.gameObject.SetActive(false);

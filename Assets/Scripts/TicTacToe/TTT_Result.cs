@@ -12,26 +12,34 @@ namespace TicTacToe
         [SerializeField] private TextMeshProUGUI _text;
 
         [Header("Colors")]
+        [SerializeField] private Color _normal = Color.white;
         [SerializeField] private Color _win = Color.green;
         [SerializeField] private Color _loose = Color.red;
         [SerializeField] private Color _draw = Color.yellow;
+
+        private bool _isMultiplayer = false;
 
 
         private void Awake()
         {
             _board.OnGameStart += HandleGameStart;
+            _board.OnTurnDone += HandleTurnDone;
             _board.OnGameDone += HandleGameDone;
         }
 
-        private void HandleGameStart()
+        private void HandleTurnDone(bool isPlayerOneTurn)
         {
-            _text.text = "";
+            if (!_isMultiplayer) return;
+            if (isPlayerOneTurn)
+                WriteText(_normal, "Player 1 turn");
+            else
+                WriteText(_normal, "Player 2 turn");
         }
 
-        private void WriteText(Color color, string text)
+        private void HandleGameStart(bool isMultiplayer)
         {
-            _text.color = color;
-            _text.text = text;
+            _isMultiplayer = isMultiplayer;
+            WriteText(_normal, _isMultiplayer ? "Player 1 turn" : "");
         }
 
         private void HandleGameDone(Result result)
@@ -39,10 +47,16 @@ namespace TicTacToe
             switch (result)
             {
                 case Result.PLAYER_ONE_WIN:
-                    WriteText(_win, "You Win !");
+                    if (_isMultiplayer)
+                        WriteText(_win, "Player 1 Win !");
+                    else
+                        WriteText(_win, "You Win !");
                     break;
                 case Result.PLAYER_TWO_WIN:
-                    WriteText(_loose, "You Loose !");
+                    if (_isMultiplayer)
+                        WriteText(_win, "Player 2 Win !");
+                    else
+                        WriteText(_loose, "You Loose !");
                     break;
                 case Result.DRAW:
                     WriteText(_draw, "Draw !");
@@ -50,5 +64,10 @@ namespace TicTacToe
             }
         }
 
+        private void WriteText(Color color, string text)
+        {
+            _text.color = color;
+            _text.text = text;
+        }
     }
 }

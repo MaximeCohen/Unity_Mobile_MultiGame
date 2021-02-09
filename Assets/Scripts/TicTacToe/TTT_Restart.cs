@@ -28,7 +28,7 @@ namespace TicTacToe
             _button.gameObject.SetActive(true);
         }
 
-        private void HandleGameStart()
+        private void HandleGameStart(bool isMultiplayer)
         {
             _button.gameObject.SetActive(false);
         }

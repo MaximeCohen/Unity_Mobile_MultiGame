@@ -45,8 +45,19 @@ namespace TicTacToe
         [Header("Settings")]
         [SerializeField] public bool IsMultiplayer = false;
 
-        public UnityAction OnGameStart = null;
+        /// <summary>
+        /// Event when the game start
+        /// </summary>
+        public UnityAction<bool> OnGameStart = null;
+
+        /// <summary>
+        /// Event when the turn is done
+        /// </summary>
         public UnityAction<bool> OnTurnDone = null;
+
+        /// <summary>
+        /// Event when the game is done
+        /// </summary>
         public UnityAction<Result> OnGameDone = null;
 
         private Shape _playerOneShape = Shape.NONE;
@@ -58,7 +69,6 @@ namespace TicTacToe
 
         private bool _playerOneTurn = true;
 
-
         private void Awake()
         {
             _iA.OnComputeDone += HandleIaSelectCell;
@@ -66,6 +76,7 @@ namespace TicTacToe
 
         private void Start()
         {
+            _cellsCanvasGroup.blocksRaycasts = false;
             _playerOneShape = _data.DefaultPlayerOneShape;
             _playerTwoShape = _data.DefaultPlayerTwoShape;
             _cells = _arrayCell.GetArray();
@@ -74,7 +85,6 @@ namespace TicTacToe
                 int index = i;
                 _cells[i].OnClick += () => HandlePlayerClickCell(index);
             }
-            OnGameStart?.Invoke();
         }
 
         private bool IsLineSameShape(int index1, int index2, int index3)
@@ -105,29 +115,37 @@ namespace TicTacToe
             return false;
         }
 
-        private void TurnDone()
+        private void CheckGameState()
         {
             if (CheckGameDone())
             {
-                var playerResult = _cells[_lineDone.Item1].CurrentShape == _playerOneShape ? Result.PLAYER_ONE_WIN : Result.PLAYER_TWO_WIN;
                 _cellsCanvasGroup.blocksRaycasts = false;
-                Debug.Log($"You {playerResult} !");
+                var playerResult = _cells[_lineDone.Item1].CurrentShape == _playerOneShape ? Result.PLAYER_ONE_WIN : Result.PLAYER_TWO_WIN;
+                Debug.Log($"{playerResult}");
                 OnGameDone?.Invoke(playerResult);
             }
             else if (CheckBoardFull())
             {
                 _cellsCanvasGroup.blocksRaycasts = false;
-                Debug.Log("Draw !");
+                Debug.Log("Draw");
                 OnGameDone?.Invoke(Result.DRAW);
             }
             else
             {
-                _playerOneTurn = !_playerOneTurn;
+                Turn();
+            }
+        }
+
+        private void Turn()
+        {
+            _playerOneTurn = !_playerOneTurn;
+            if (!IsMultiplayer)
+            {
                 _cellsCanvasGroup.blocksRaycasts = _playerOneTurn;
                 if (!_playerOneTurn)
                     _iA.Compute(_cells, _playerTwoShape);
-                OnTurnDone?.Invoke(_playerOneTurn);
             }
+            OnTurnDone?.Invoke(_playerOneTurn);
         }
 
         public void RestartGame()
@@ -138,7 +156,7 @@ namespace TicTacToe
             }
             _playerOneTurn = true;
             _cellsCanvasGroup.blocksRaycasts = true;
-            OnGameStart?.Invoke();
+            OnGameStart?.Invoke(IsMultiplayer);
         }
 
         public void ChangeShape(Shape shapePlayerOne, Shape shapePlayerTwo)
@@ -154,14 +172,14 @@ namespace TicTacToe
         {
             if (_cells[index].CurrentShape != Shape.NONE)
                 return;
-            _cells[index].CurrentShape = _playerOneShape;
-            TurnDone();
+            _cells[index].CurrentShape = _playerOneTurn ? _playerOneShape : _playerTwoShape;
+            CheckGameState();
         }
 
         private void HandleIaSelectCell(int index)
         {
-            _cells[index].CurrentShape = _playerTwoShape;
-            TurnDone();
+            _cells[index].CurrentShape = _playerOneTurn ? _playerOneShape : _playerTwoShape;
+            CheckGameState();
         }
 
         #endregion

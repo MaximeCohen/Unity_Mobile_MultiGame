@@ -68,6 +68,7 @@ namespace TicTacToe
                 if (scoreCells[i] > bestScore)
                     bestScore = scoreCells[i];
             }
+
             Debug.Log($"\n{scoreCells[0]},{scoreCells[1]},{scoreCells[2]}\n" +
                 $"{scoreCells[3]},{scoreCells[4]},{scoreCells[5]}\n" +
                 $"{scoreCells[6]},{scoreCells[7]},{scoreCells[8]}\n");

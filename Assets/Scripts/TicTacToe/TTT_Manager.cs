@@ -32,6 +32,8 @@ namespace TicTacToe
         private void Start()
         {
             SetupButtons();
+            var board = FindObjectOfType<TTT_Board>();
+            board.RestartGame();
         }
 
         private void SetupButtons()
@@ -58,9 +60,13 @@ namespace TicTacToe
             SetupButtons();
         }
 
-        private void InitGame()
+
+        private void InitGame(bool isMultiplayer)
         {
             SetupButtons();
+            var board = FindObjectOfType<TTT_Board>();
+            board.IsMultiplayer = isMultiplayer;
+            board.RestartGame();
         }
 
         public void LoadMenu()
@@ -81,13 +87,13 @@ namespace TicTacToe
         public void HandleLoadedGameMultiplayer(Scene scene, LoadSceneMode loadSceneMode)
         {
             SceneManager.sceneLoaded -= HandleLoadedGameMultiplayer;
-            InitGame();
+            InitGame(true);
         }
 
         public void HandleLoadedGameSolo(Scene scene, LoadSceneMode loadSceneMode)
         {
             SceneManager.sceneLoaded -= HandleLoadedGameSolo;
-            InitGame();
+            InitGame(false);
         }
 
         public void HandleLoadedMenu(Scene scene, LoadSceneMode loadSceneMode)
