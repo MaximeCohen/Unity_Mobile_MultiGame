@@ -33,7 +33,8 @@ namespace TicTacToe
         {
             SetupButtons();
             var board = FindObjectOfType<TTT_Board>();
-            board.RestartGame();
+            if (board != null)
+                board.RestartGame();
         }
 
         private void SetupButtons()

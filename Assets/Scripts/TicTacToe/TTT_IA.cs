@@ -11,7 +11,7 @@ namespace TicTacToe
     {
         public enum IAState
         {
-            DUMB,
+            DUMB = 0,
             EASY,
             NORMAL,
             HARD
@@ -19,7 +19,7 @@ namespace TicTacToe
 
         public UnityAction<int> OnComputeDone = null;
 
-        [SerializeField] public IAState State = IAState.EASY;
+        [SerializeField] private IAState _state = IAState.EASY;
 
         private int _moveFound;
 
@@ -110,9 +110,14 @@ namespace TicTacToe
             _moveFound = FoundBestCellByScore(cells, iaShape, tableScore);
         }
 
+        public void ChangeDifficult(IAState state)
+        {
+            _state = state;
+        }
+
         public void Compute(TTT_Cell[] cells, Shape iaShape)
         {
-            switch (State)
+            switch (_state)
             {
                 case IAState.DUMB:
                     ComputeDumb(cells, iaShape);

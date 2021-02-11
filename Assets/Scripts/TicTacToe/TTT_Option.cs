@@ -5,11 +5,15 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
+using static TicTacToe.TTT_IA;
 
 namespace TicTacToe
 {
     [Serializable]
     public class SelectShapeEvent : UnityEvent<Shape, Shape> { };
+
+    [Serializable]
+    public class SelectDifficultEvent : UnityEvent<IAState> { };
 
     public class TTT_Option : MonoBehaviour
     {
@@ -19,11 +23,14 @@ namespace TicTacToe
         [Header("References")]
         [SerializeField] private GameObject _mainOption = null;
         [SerializeField] private GameObject _shapeOption = null;
+        [SerializeField] private GameObject _difficultyOption = null;
         [SerializeField] private GameObject _shapeButtons = null;
         [SerializeField] private TextMeshProUGUI _title;
 
         [Header("Events")]
         [SerializeField] public SelectShapeEvent OnSelectShape = null;
+        [SerializeField] public UnityEvent OnClickReset = null;
+        [SerializeField] public SelectDifficultEvent OnSelectDifficult = null;
 
         private Shape _playerOneShapeSelected = Shape.NONE;
 
@@ -72,11 +79,18 @@ namespace TicTacToe
             _buttons.ForEach(button => button.interactable = true);
         }
 
+        public void ResetScore()
+        {
+            gameObject.SetActive(false);
+            OnClickReset?.Invoke();
+        }
+
         public void ShowMain()
         {
             gameObject.SetActive(true);
             _mainOption.SetActive(true);
             _shapeOption.SetActive(false);
+            _difficultyOption.SetActive(false);
         }
 
         public void ShowShape()
@@ -84,6 +98,21 @@ namespace TicTacToe
             gameObject.SetActive(true);
             _mainOption.SetActive(false);
             _shapeOption.SetActive(true);
+            _difficultyOption.SetActive(false);
+        }
+
+        public void ShowDifficulty()
+        {
+            gameObject.SetActive(true);
+            _mainOption.SetActive(false);
+            _shapeOption.SetActive(false);
+            _difficultyOption.SetActive(true);
+        }
+
+        public void SelectDifficulty(int level)
+        {
+            ShowMain();
+            OnSelectDifficult?.Invoke((IAState)level);
         }
 
         public void Hide()

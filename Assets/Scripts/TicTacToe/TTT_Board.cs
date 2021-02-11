@@ -72,11 +72,6 @@ namespace TicTacToe
         private void Awake()
         {
             _iA.OnComputeDone += HandleIaSelectCell;
-        }
-
-        private void Start()
-        {
-            _cellsCanvasGroup.blocksRaycasts = false;
             _playerOneShape = _data.DefaultPlayerOneShape;
             _playerTwoShape = _data.DefaultPlayerTwoShape;
             _cells = _arrayCell.GetArray();
